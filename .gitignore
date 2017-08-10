@@ -66,3 +66,4 @@ event.json
 !test/event.json
 context.json
 .lambda
+ffmpeg
