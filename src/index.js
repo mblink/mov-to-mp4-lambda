@@ -1,17 +1,18 @@
 import ffmpeg from 'ffmpeg-lambda-binary';
 import { createReadStream, createWriteStream } from 'fs';
-import { dirname, join } from 'path';
+import { join, sep } from 'path';
 import fs from 'fs-extra';
 import { S3 } from 'aws-sdk';
 import State from './state';
-
-const tmp = join(__dirname, 'tmp');
 
 const stackTrace = e => (e.stack || []).split('\n').slice(1).map(l => l.trim().replace(/^at /, ''));
 
 const decodeKey = key => decodeURIComponent(key).replace(/\+/g, ' ');
 
-const dlPath = key => join(tmp, key);
+const dlPath = key => {
+  const parts = key.split('/');
+  return join(sep, 'tmp', parts[parts.length - 1]);
+};
 
 const convertObject = object =>
   ffmpeg(['-i', dlPath(object.movKey), '-c', 'copy', '-y', dlPath(object.mp4Key)])
@@ -67,14 +68,13 @@ class MovToMp4 {
   }
 
   downloadObject(object) {
-    return fs.mkdirp(dirname(dlPath(object.movKey)))
-      .then(() => new Promise((resolve, reject) =>
-        this.s3.getObject({ Bucket: object.bucket, Key: object.movKey })
-          .on('error', reject)
-          .createReadStream()
-          .on('end', () => State.info('Download finished', object)().then(() => resolve(object)))
-          .on('error', reject)
-          .pipe(createWriteStream(dlPath(object.movKey)))));
+    return new Promise((resolve, reject) =>
+      this.s3.getObject({ Bucket: object.bucket, Key: object.movKey })
+        .on('error', reject)
+        .createReadStream()
+        .on('end', () => State.info('Download finished', object)().then(() => resolve(object)))
+        .on('error', reject)
+        .pipe(createWriteStream(dlPath(object.movKey))));
   }
 
   uploadConvertedObject(object) {
