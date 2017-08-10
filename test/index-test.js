@@ -138,7 +138,7 @@ describe('handler', () => {
       [
         'S3.getObject',
         [s3GetObject, 'on'],
-        s => s.callsArgWith(1, new Error('CloudWatchLogs.filterLogEvents error'))
+        s => s.callsArgWith(1, new Error('S3.getObject error'))
       ],
       ['S3.putObject', [s3PutObject, 'promise']]
     ].forEach(([name, fn, genStub]) => it(`handles failure when calling ${name}`, () => {
