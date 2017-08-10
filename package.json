@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrdziuban/mov-to-mp4-lambda.git"
+    "url": "git+https://github.com/mblink/mov-to-mp4-lambda.git"
   },
-  "author": "Matt Dziuban",
-  "license": "UNLICENSED",
-  "private": true,
+  "author": "BondLink <dev@bondlink.org>",
+  "license": "Apache-2.0",
   "dependencies": {
     "aws-sdk": "^2.95.0",
-    "ffmpeg-lambda-binary": "github:mrdziuban/ffmpeg-lambda-binary#master",
-    "fs-extra": "^4.0.1"
+    "ffmpeg-lambda-binary": "github:mblink/ffmpeg-lambda-binary#2017-08-10",
+    "fs-extra": "^4.0.1",
+    "lambda-state": "github:mblink/lambda-state#0.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

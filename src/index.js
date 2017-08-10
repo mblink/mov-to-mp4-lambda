@@ -1,15 +1,15 @@
-import ffmpeg from 'ffmpeg-lambda-binary';
 import { createReadStream, createWriteStream } from 'fs';
 import { join, sep } from 'path';
+import ffmpeg from 'ffmpeg-lambda-binary';
 import fs from 'fs-extra';
+import State from 'lambda-state';
 import { S3 } from 'aws-sdk';
-import State from './state';
 
 const stackTrace = e => (e.stack || []).split('\n').slice(1).map(l => l.trim().replace(/^at /, ''));
 
 const decodeKey = key => decodeURIComponent(key).replace(/\+/g, ' ');
 
-const dlPath = key => {
+const dlPath = (key) => {
   const parts = key.split('/');
   return join(sep, 'tmp', parts[parts.length - 1]);
 };
@@ -72,7 +72,7 @@ class MovToMp4 {
       this.s3.getObject({ Bucket: object.bucket, Key: object.movKey })
         .on('error', reject)
         .createReadStream()
-        .on('end', () => State.info('Download finished', object)().then(() => resolve(object)))
+        .on('end', () => resolve(object))
         .on('error', reject)
         .pipe(createWriteStream(dlPath(object.movKey))));
   }
