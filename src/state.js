@@ -7,8 +7,6 @@ const logLevels = {
 
 const timestamp = () => new Date().toISOString();
 
-const stackTrace = e => (e.stack || []).split('\n').slice(1).map(l => l.trim().replace(/^at /, ''));
-
 let singleton;
 
 class InternalState {
