@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 import State from 'lambda-state';
 import { S3 } from 'aws-sdk';
 
-const stackTrace = e => (e.stack || []).split('\n').slice(1).map(l => l.trim().replace(/^at /, ''));
+const stackTrace = e => (e.stack || '').split('\n').slice(1).map(l => l.trim().replace(/^at /, ''));
 
 const decodeKey = key => decodeURIComponent(key).replace(/\+/g, ' ');
 
